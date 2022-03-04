@@ -9,18 +9,19 @@ router.get('/', (req, res) => {
 
   Product.findAll({
 
-    attributes: ['id', 'product_name', 'price', 'stock', 'catagory_id'],
+    attributes: ['id', 'product_name', 'price', 'stock'],
     // be sure to include its associated Category and Tag data
 
     include: [
       {
         model: Category,
-        attributes: ['id', 'category_name']
+        attributes: ['category_name']
       },
       {
         model: Tag,
-        attributes: ['id', 'tag_name']
-      }
+        attributes: ['tag_name']
+      },
+
     ]
 
 
@@ -161,10 +162,11 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
   Product.destroy({
+    where:{
     id: req.params.id,
-  }
-  )
-})
+    }
+  })
+
   .then(dbPostData => {
     if (!dbPostData) {
       res.status(404).json({ message: 'No product found with this id' });
@@ -176,6 +178,6 @@ router.delete('/:id', (req, res) => {
     console.log(err);
     res.status(500).json(err);
   });
-
+})
 
 module.exports = router;
